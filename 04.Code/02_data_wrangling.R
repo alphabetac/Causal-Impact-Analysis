@@ -14,15 +14,21 @@ library(tidyverse)
 
 ## LOAD DATA --------------------------
 
-business_conversions <- read_csv("03.Data/raw/business_conversions_2021_2022")
+business_demo_requests <- read_csv("03.Data/raw/business_demo_requests_2021_2022.csv")
+business_free_signups <- read_csv("03.Data/raw/business_free_signups_2021_2022.csv")
 business_users <- read_csv(here("03.Data/raw/business_users_2021_2022.csv"))
 
 ## TIDY DATA --------------------------
 
-business_conversions <- business_conversions %>%
+business_demo_requests <- business_demo_requests %>%
   pivot_wider(id_cols = date,
               names_from = countryIsoCode,
               values_from = goal10Completions)
+
+business_free_signups <- business_free_signups %>%
+  pivot_wider(id_cols = date,
+              names_from = countryIsoCode,
+              values_from = goal6Completions)
 
 business_users <- business_users %>%
   pivot_wider(id_cols = date,
@@ -31,8 +37,8 @@ business_users <- business_users %>%
 
 ## SAVE DATA --------------------------
 
-business_conversions %>%
-  write_csv("03.Data/interim/business_conversions_2021_2022")
+business_demo_requests %>%
+  write_csv("03.Data/interim/business_demo_requests_2021_2022.csv")
 
-business_users %>%
-  write_csv(here("03.Data/interim/business_users_2021_2022.csv"))
+business_free_signups %>%
+  write_csv(here("03.Data/interim/business_free_signups_2021_2022.csv"))

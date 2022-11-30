@@ -23,10 +23,26 @@ my_accounts <- ga_account_list()
 trustpilot_business_id <- 98879677
 
 ## Business conversions (demo request) for DE, IT, FR, SE, CH and AT
-business_conversions <- google_analytics(
+business_demo_requests <- google_analytics(
   trustpilot_business_id, 
   date_range = c("2021-01-01", "2022-11-15"),
   metrics = c("goal10Completions"),
+  dimensions = c("date", "countryIsoCode"),
+  filter_clause_ga4(list(dim_filter("ga:countryIsoCode", "EXACT", "DE"),
+                         dim_filter("ga:countryIsoCode", "EXACT", "IT"),
+                         dim_filter("ga:countryIsoCode", "EXACT", "FR"),
+                         dim_filter("ga:countryIsoCode", "EXACT", "SE"),
+                         dim_filter("ga:countryIsoCode", "EXACT", "CH"),
+                         dim_filter("ga:countryIsoCode", "EXACT", "AT")),
+                    operator = "OR"),
+  anti_sample = TRUE
+)
+
+## Business conversions (free signup) for DE, IT, FR, SE, CH and AT
+business_free_signups <- google_analytics(
+  trustpilot_business_id, 
+  date_range = c("2021-01-01", "2022-11-15"),
+  metrics = c("goal6Completions"),
   dimensions = c("date", "countryIsoCode"),
   filter_clause_ga4(list(dim_filter("ga:countryIsoCode", "EXACT", "DE"),
                          dim_filter("ga:countryIsoCode", "EXACT", "IT"),
@@ -57,8 +73,11 @@ business_users <- google_analytics(
 
 ## SAVE DATA --------------------------
 
-business_conversions %>%
-  write_csv("03.Data/raw/business_conversions_2021_2022")
+business_demo_requests %>%
+  write_csv("03.Data/raw/business_demo_requests_2021_2022.csv")
+
+business_free_signups %>%
+  write_csv("03.Data/raw/business_free_signups_2021_2022.csv")
 
 business_users %>%
   write_csv(here("03.Data/raw/business_users_2021_2022.csv"))
